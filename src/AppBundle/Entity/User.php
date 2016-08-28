@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
 class User
@@ -51,7 +51,7 @@ class User
 
 
     /**
-     * @OneToMany(targetEntity="Entry", mappedBy="User")
+     * @ORM\OneToMany(targetEntity="Entry", mappedBy="User")
      */
     private $entries;
 

@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+
+
+
+{% for entry in entries %}
 <div class="row">
 	<div class="col-sm-1">
 		<div class="thumbnail">
@@ -10,14 +14,18 @@
 	<div class="col-sm-5">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>myusername</strong> <span class="text-muted">commented 5 days ago</span>
+				<strong>{{ entry.author.username }}</strong> <span class="text-muted">commented on {{ entry.createdAt|date('F j, Y, g:i a') }}</span>
 			</div>
 			<div class="panel-body">
-				Panel content
+				<p>{{ entry.title }}</p>
+				<p>{{ entry.content }}</p>
 			</div><!-- /panel-body -->
 		</div><!-- /panel panel-default -->
 	</div><!-- /col-sm-5 -->
 </div>
+{% endfor %}
+
+
 <style>
 .thumbnail {
     padding:0px;
