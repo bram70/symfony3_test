@@ -1,40 +1,36 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 	<a class="btn btn-primary" href="/entry/create">Create entry</a>
-
-<div class="count">
-    Total entries: {{ pagination.getTotalItemCount }}
-</div>
-
-{% for entry in pagination %}
-<div class="row">
-	<div class="col-sm-1">
-		<div class="thumbnail">
-			<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
-		</div>
-	</div>
-	<div class="col-sm-11">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<strong>{{ entry.author.username }}</strong>
-				<span class="text-muted">commented {{ entry.createdAt|distance_of_time_in_words(entry.updateAt) }}
-				</span>
+	<hr>
+	{% for entry in pagination %}
+	<div class="row">
+		<div class="col-sm-1">
+			<div class="thumbnail">
+				<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
 			</div>
-			<div class="panel-body">
-				<p><strong>{{ entry.title }}</strong>
-				<span style="float:right"><a href="/entry/edit/{{entry.id}}" class="glyphicon glyphicon-pencil"></a></span>
-				</p>
+		</div>
+		<div class="col-sm-11">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong><a href="/">{{ entry.author.username }}</a></strong>
+					<span class="text-muted">commented {{ entry.createdAt|distance_of_time_in_words(entry.updateAt) }}
+					</span>
+				</div>
+				<div class="panel-body">
+					<p><strong>{{ entry.title }}</strong>
+					<span style="float:right"><a href="/entry/edit/{{entry.id}}" class="glyphicon glyphicon-pencil"></a></span>
+					</p>
 
-				<p>{{ entry.content }}</p>
+					<p>{{ entry.content }}</p>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-{% endfor %}
+	{% endfor %}
 
-<div class="navigation">
-    {{ knp_pagination_render(pagination) }}
-</div>
+	<div class="navigation">
+	    {{ knp_pagination_render(pagination) }}
+	</div>
 
 
 
