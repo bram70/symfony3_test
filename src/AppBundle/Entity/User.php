@@ -166,5 +166,10 @@ class User
     {
         return $this->twitterUsername;
     }
+
+
+    public function __toString() {
+    return "".$this->getId();
+}
 }
 

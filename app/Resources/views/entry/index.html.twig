@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+	<a class="btn btn-primary" href="/entry/create">Create entry</a>
 
 <div class="count">
-    {{ pagination.getTotalItemCount }}
+    Total entries: {{ pagination.getTotalItemCount }}
 </div>
 
 {% for entry in pagination %}
@@ -10,20 +11,24 @@
 	<div class="col-sm-1">
 		<div class="thumbnail">
 			<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
-		</div><!-- /thumbnail -->
-	</div><!-- /col-sm-1 -->
-
-	<div class="col-sm-5">
+		</div>
+	</div>
+	<div class="col-sm-11">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>{{ entry.author.username }}</strong> <span class="text-muted">commented on {{ entry.createdAt|date('F j, Y, g:i a') }}</span>
+				<strong>{{ entry.author.username }}</strong>
+				<span class="text-muted">commented on {{ entry.createdAt|date('F j, Y, g:i a') }}
+				</span>
 			</div>
 			<div class="panel-body">
-				<p>{{ entry.title }}</p>
+				<p><strong>{{ entry.title }}</strong>
+				<span style="float:right"><a href="/entry/edit/{{entry.id}}" class="glyphicon glyphicon-pencil"></a></span>
+				</p>
+
 				<p>{{ entry.content }}</p>
-			</div><!-- /panel-body -->
-		</div><!-- /panel panel-default -->
-	</div><!-- /col-sm-5 -->
+			</div>
+		</div>
+	</div>
 </div>
 {% endfor %}
 
