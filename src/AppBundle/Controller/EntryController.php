@@ -123,12 +123,11 @@ class EntryController extends Controller
             ->findBy(array(), array('createdAt' => 'DESC')); */
 
         $em    = $this->get('doctrine.orm.entity_manager');
-        $dql   = "SELECT a FROM AppBundle:Entry a ORDER BY a.createdAt DESC";
-
+        $dql   = "SELECT a FROM AppBundle:Entry a GROUP BY a.createdAt HAVING count(a.author) <= 3 ORDER BY a.createdAt DESC";
         $query = $em->createQuery($dql);
 
         $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate( $query,$request->query->getInt('page', 1), 3);
+        $pagination = $paginator->paginate( $query,$request->query->getInt('page', 1), 3, array('wrap-queries'=>true));
         return $this->render('entry/index.html.twig', array('pagination' => $pagination));
     }
 }
