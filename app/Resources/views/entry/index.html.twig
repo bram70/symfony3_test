@@ -17,7 +17,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<strong>{{ entry.author.username }}</strong>
-				<span class="text-muted">commented on {{ entry.createdAt|date('F j, Y, g:i a') }}
+				<span class="text-muted">commented {{ entry.createdAt|distance_of_time_in_words(entry.updateAt) }}
 				</span>
 			</div>
 			<div class="panel-body">
