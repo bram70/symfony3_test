@@ -66,12 +66,18 @@ class EntryController extends Controller
     /**
      * @Route("/", name="entry_list")
      */
-    public function listAction()
+    public function listAction(Request $request)
     {
-        $entries = $this->getDoctrine()
+        /*$entries = $this->getDoctrine()
             ->getRepository('AppBundle:Entry')
-            ->findBy(array(), array('createdAt' => 'DESC'));
+            ->findBy(array(), array('createdAt' => 'DESC')); */
 
-        return $this->render('entry/index.html.twig', array('entries' => $entries));
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $dql   = "SELECT a FROM AppBundle:Entry a";
+        $query = $em->createQuery($dql);
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate( $query,$request->query->getInt('page', 1), 3);
+        return $this->render('entry/index.html.twig', array('pagination' => $pagination));
     }
 }

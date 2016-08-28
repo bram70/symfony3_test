@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 
+<div class="count">
+    {{ pagination.getTotalItemCount }}
+</div>
 
-
-{% for entry in entries %}
+{% for entry in pagination %}
 <div class="row">
 	<div class="col-sm-1">
 		<div class="thumbnail">
@@ -24,6 +26,11 @@
 	</div><!-- /col-sm-5 -->
 </div>
 {% endfor %}
+
+<div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+</div>
+
 
 
 <style>
