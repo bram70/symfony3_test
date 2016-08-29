@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Entry;
+use AppBundle\Entity\TwitterAPIExchange;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,10 +118,6 @@ class EntryController extends Controller
      */
     public function listAction(Request $request)
     {
-        /*$entries = $this->getDoctrine()
-            ->getRepository('AppBundle:Entry')
-            ->findBy(array(), array('createdAt' => 'DESC')); */
-
         $em    = $this->get('doctrine.orm.entity_manager');
         $dql   = "SELECT a FROM AppBundle:Entry a GROUP BY a.createdAt HAVING count(a.author) <= 3 ORDER BY a.createdAt DESC";
         $query = $em->createQuery($dql);
@@ -128,5 +125,30 @@ class EntryController extends Controller
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate( $query,$request->query->getInt('page', 1), 3, array('wrap-queries'=>true));
         return $this->render('entry/index.html.twig', array('pagination' => $pagination));
+    }
+
+
+    /**
+     * @Route("/tweet/list", name="tweet_list")
+     */
+    public function tweetAction(Request $request)
+    {
+        
+        $settings = array(
+            'oauth_access_token' => "106582776-S9as7vzjeCFtumeYNn84sZTdrCLDBfPfiNRfC1ms",
+            'oauth_access_token_secret' => "2DXksBEydgaH7UT6UIZiGuYRcFelAQBLMCj81gOawdkPO",
+            'consumer_key' => "ILWouRPfGoQk4CEoODmm9lPM3",
+            'consumer_secret' => "nZ8ejZvtOg0vyYyydqwcCuw4fQEtakFLDHlrJRIX4Z6dLuSAqw"
+        );
+
+        $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+        $getfield = '?screen_name=wanderbravo&count=3';
+        $requestMethod = 'GET';
+
+        $twitter = new TwitterAPIExchange($settings);
+        echo $twitter->setGetfield($getfield)
+            ->buildOauth($url, $requestMethod)
+            ->performRequest();
+        die;
     }
 }
