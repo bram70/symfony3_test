@@ -19,9 +19,10 @@ class EntryController extends Controller
     public function createAction(Request $request)
     {
 
+        $user = $this->getUser();
         $entry = new Entry;
 
-        $entry->setAuthor($this->getDoctrine()->getRepository('AppBundle:User')->find(2));
+        $entry->setAuthor($user);
         $form = $this->createFormBuilder($entry)
                 ->add('title', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
                 ->add('content', TextareaType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
@@ -36,13 +37,12 @@ class EntryController extends Controller
         if ($form->isSubmitted() && $form->isValid()){
             $title = $form['title']->getData();
             $content = $form['content']->getData();
-            $author = $this->getDoctrine()->getRepository('AppBundle:User')->find($form['author']->getData());
             $now = new\DateTime('now');
 
             $entry->setTitle($title);
             $entry->setContent($content);
 
-            $entry->setAuthor($author);
+            $entry->setAuthor($user);
             $entry->setCreatedAt($now);
 
             $em = $this->getDoctrine()->getManager();
@@ -67,7 +67,6 @@ class EntryController extends Controller
         $entry = $this->getDoctrine()
             ->getRepository('AppBundle:Entry')
             ->find($id);
-
 
         $entry->setTitle($entry->getTitle());
         $entry->setContent($entry->getContent());

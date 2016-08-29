@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<a class="btn btn-primary" href="/entry/create">Create entry</a>
+
+	{% if is_granted("ROLE_USER") %}
+		<a class="btn btn-primary" href="/entry/create">Create entry</a>
+    {% endif %}
+
 	<hr>
 	{% for entry in pagination %}
 	<div class="row">
@@ -18,7 +22,9 @@
 				</div>
 				<div class="panel-body">
 					<p><strong>{{ entry.title }}</strong>
-					<span style="float:right"><a href="/entry/edit/{{entry.id}}" class="glyphicon glyphicon-pencil"></a></span>
+					{% if is_granted("ROLE_USER") %}
+						<span style="float:right"><a href="/entry/edit/{{entry.id}}" class="glyphicon glyphicon-pencil"></a></span>
+					{% endif %}
 					</p>
 
 					<p>{{ entry.content }}</p>

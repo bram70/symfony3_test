@@ -9,3 +9,7 @@ services:
         arguments: ["@translator"]
         tags:
             - { name: twig.extension }
+    app.form.registration:
+        class: AppBundle\Form\Type\RegistrationFormType
+        tags:
+            - { name: form.type, alias: app_user_registration }
