@@ -6,6 +6,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -27,8 +28,8 @@ class User extends BaseUser
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="twitter_username", type="string", length=150)
+     * @Assert\NotBlank(message="Please enter your Twitter username.", groups={"Registration", "Profile"})
+     * @ORM\Column(name="twitter_username", type="string", length=150, unique=true)
      */
     protected $twitterUsername;
 
@@ -38,10 +39,15 @@ class User extends BaseUser
      */
     protected $entries;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Tweet", mappedBy="User")
+     */
+    protected $tweets;
 
     public function __construct(){
         parent::__construct();
         $this->entries = new ArrayCollection();
+        $this->tweets = new ArrayCollection();
     }
 
 
@@ -153,7 +159,7 @@ class User extends BaseUser
 
 
     public function __toString() {
-    return "".$this->getId();
-}
+        return "".$this->getId();
+    }
 }
 

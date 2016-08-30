@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Entry;
 use AppBundle\Entity\TwitterAPIExchange;
+use AppBundle\Entity\Tweet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class EntryController extends Controller
 {
@@ -26,7 +31,7 @@ class EntryController extends Controller
         $entry->setAuthor($user);
         $form = $this->createFormBuilder($entry)
                 ->add('title', TextType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
-                ->add('content', TextareaType::class, array('attr' => array('class' => 'form-control', 'style' => 'margin-bottom:15px')))
+                ->add('content', TextareaType::class, array('attr' => array('class' => 'form-control','rows' =>5, 'style' => 'margin-bottom:15px')))
                 ->add('author', HiddenType::class )
                 ->add('save', SubmitType::class, array(
                                                 'label' => 'Create Entry',
@@ -146,9 +151,24 @@ class EntryController extends Controller
         $requestMethod = 'GET';
 
         $twitter = new TwitterAPIExchange($settings);
-        echo $twitter->setGetfield($getfield)
+        $object_tweet = $twitter->setGetfield($getfield)
             ->buildOauth($url, $requestMethod)
             ->performRequest();
-        die;
+
+        $data = json_decode($object_tweet, true);
+
+        $tweets = new \Doctrine\Common\Collections\ArrayCollection();
+        foreach($data as $result)
+        {
+            $tweet = new Tweet();
+
+            $tweet->setId($result['id']);
+            $tweet->setText($result['text']);
+            $tweet->setCreatedAt($result['created_at']);
+         
+            $tweets->add($tweet);
+        }
+
+        return $this->render('entry/tweet.html.twig', array('tweets' => $tweets));
     }
 }

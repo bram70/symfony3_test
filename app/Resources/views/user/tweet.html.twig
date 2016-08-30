@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+	<hr>
+	{% for tweet in tweets %}
+	<div class="row" id="{{ tweet.id }}">
+		<div class="col-sm-1">
+			<div class="thumbnail">
+				<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+			</div>
+		</div>
+		<div class="col-sm-11">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong>{{ tweet.username }}</strong>
+					<span class="text-muted">commented {{ tweet.createdAt }}
+					</span>
+				</div>
+				<div class="panel-body">
+					{% if is_granted("ROLE_USER") and 
+							(app.user.getTwitterUsername() == tweet.username) %}
+
+						{% if tweet.hidden == 1 %}
+							<span style="float:right">
+							<a href="#" OnClick="HideTweet({{ tweet.id }}, 
+									{{ tweet.username }}, {{ tweet.hidden }})">Show</a>
+							</span>
+						{% else %}
+							<span style="float:right">
+								<a href="#" OnClick="HideTweet('{{ tweet.id }}', 
+										'{{ tweet.username }}', '{{ tweet.hidden }}')">Hide</a>
+							</span>
+						{% endif %}
+					{% endif %}
+					</p>
+
+					<p>{{ tweet.text }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+
+{% endblock %}
