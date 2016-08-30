@@ -17,7 +17,7 @@
 		<div class="col-sm-11">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<strong><a href="/user/entries/{{ entry.id }}">{{ entry.author.username }}</a></strong>
+					<strong><a href="/user/entries/{{ entry.author.id }}">{{ entry.author.username }}</a></strong>
 					<span class="text-muted">commented {{ entry.createdAt|distance_of_time_in_words(entry.updateAt) }}
 					</span>
 				</div>
