@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+<link rel="stylesheet" href="{{ asset('css/main.css') }}" />
 
 	{% if is_granted("ROLE_USER") %}
 		<a class="btn btn-primary" href="/entry/create">Create entry</a>

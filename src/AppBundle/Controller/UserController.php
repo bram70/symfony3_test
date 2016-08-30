@@ -8,6 +8,7 @@ use AppBundle\Entity\Tweet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -29,6 +30,7 @@ class UserController extends Controller
             ->getRepository('AppBundle:User')
             ->find($id);
 
+
         $settings = array(
             'oauth_access_token' => "106582776-S9as7vzjeCFtumeYNn84sZTdrCLDBfPfiNRfC1ms",
             'oauth_access_token_secret' => "2DXksBEydgaH7UT6UIZiGuYRcFelAQBLMCj81gOawdkPO",
@@ -48,16 +50,23 @@ class UserController extends Controller
         $data = json_decode($object_tweet, true);
 
         $tweets = new \Doctrine\Common\Collections\ArrayCollection();
-
         foreach($data as $result)
         {
-            $tweet = new Tweet();
+        	$id_tweet = $result['id'];
+        	$tweet = $this->getDoctrine()
+		            ->getRepository('AppBundle:Tweet')
+		            ->find($id_tweet);
+        	if(!$tweet)
+        	{
 
-            $tweet->setId($result['id']);
+            	$tweet = new Tweet();
+            	$tweet->setId($id_tweet);
+	            $tweet->setUsername($result['user']['screen_name']);
+	            $tweet->setHidden(0);
+            }
+
             $tweet->setText($result['text']);
             $tweet->setCreatedAt($result['created_at']);
-            $tweet->setUsername($result['user']['screen_name']);
-         
             $tweets->add($tweet);
         }
 
@@ -67,25 +76,27 @@ class UserController extends Controller
     /**
      * @Route("/tweet/hide/{id}/{username}/{hidden}", name="tweet_hide")
      */
-    public function hideAction($id, Request $request)
+    public function hideAction($id, $username, $hidden, Request $request)
     {
     	$em = $this->getDoctrine()->getManager();
     	$tweet = $em->getRepository('AppBundle:Tweet')->find($id);
-		$hidden = $request->request->get('hidden') == 0 ? 1 : 0;
+		$hidden_tweet = $hidden == 0 ? 1 : 0;
+
         if(!$tweet)
         {
         	$tweet = new Tweet();
+        	$username_tweet = $username;
 
         	$tweet->setId($id);
-        	$tweet->setUsername($request->request->get('username'));
-        	$tweet->setHidden($hidden);
+        	$tweet->setUsername($username_tweet);
+        	$tweet->setHidden($hidden_tweet);
 
         	$em->persist($tweet);
 		    $em->flush();
         }
         else
         {
-        	$tweet->setHidden($hidden);
+        	$tweet->setHidden($hidden_tweet);
         	$em->flush();
 
         }

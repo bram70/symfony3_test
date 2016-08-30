@@ -39,15 +39,10 @@ class User extends BaseUser
      */
     protected $entries;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Tweet", mappedBy="User")
-     */
-    protected $tweets;
 
     public function __construct(){
         parent::__construct();
         $this->entries = new ArrayCollection();
-        $this->tweets = new ArrayCollection();
     }
 
 

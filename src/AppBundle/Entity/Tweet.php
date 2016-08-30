@@ -32,8 +32,7 @@ class Tweet
     /**
      * @var string
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tweets")
-     * @ORM\JoinColumn(name="username", referencedColumnName="twitter_username")
+     * @ORM\Column(name="username", type="string", length=100)
      */
     private $username;
 

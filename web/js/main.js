@@ -1,18 +1,18 @@
-function HideTweet(id, username, hidden){ 
-
-var obj = {
-	id: id,
-	username: username,
-	hidden: hidden
-};
+function HideTweet(url){ 
 
     $.ajax({
     	type: "POST",
-        url: '/tweet/hide',
-        data: JSON.stringify(obj)
-            ,success: function(response) {
-                 $('#'+response['id']).toggleClass('classNew');;
-            }
-    })
+        url: url,
+        success: function(response) {
+        	$('#'+response['id']+'_div').toggleClass('ShowOrHidden');
+        	$('#'+response['id']+'_a').toggleClass('Hidden');
+
+        	var value_hidden = "Hide";
+        	if($('#'+response['id']+'_a').hasClass('Hidden')){
+    			value_hidden = "Show";
+			}
+			$('#'+response['id']+'_a').text(value_hidden);
+        }
+    });
     return false;
 }

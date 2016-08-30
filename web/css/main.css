@@ -26,3 +26,8 @@
     border-right-color:#ddd;
     border-width:8px;
 }
+
+.ShowOrHidden
+{
+    opacity: 0.5;    
+}
